@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'welcome_page.dart'; // استيراد صفحة البداية
 
 void main() {
   runApp(const MyApp());
@@ -16,7 +15,42 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.deepPurple,
       ),
-      home: const WelcomePage(), // صفحة البداية للتطبيق
+      home: const WelcomePage(),
+    );
+  }
+}
+
+class WelcomePage extends StatelessWidget {
+  const WelcomePage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // اللوغو الجديد في الوسط
+            Image.asset(
+              'assets/images/1794256694210.jpg',
+              width: 200,
+              height: 200,
+              fit: BoxFit.contain,
+            ),
+            const SizedBox(height: 20),
+            // اسم التطبيق
+            const Text(
+              'Vaigô',
+              style: TextStyle(
+                fontSize: 30,
+                fontWeight: FontWeight.bold,
+                color: Colors.deepPurple,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
