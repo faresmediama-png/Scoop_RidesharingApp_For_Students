@@ -12,7 +12,6 @@ class WelcomePage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // اللوغو في الوسط
             Image.asset(
               'assets/images/1794256694210.jpg',
               width: 200,
@@ -20,7 +19,6 @@ class WelcomePage extends StatelessWidget {
               fit: BoxFit.contain,
             ),
             const SizedBox(height: 20),
-            // اسم التطبيق Vaigo
             const Text(
               'Vaigo',
               style: TextStyle(
@@ -30,7 +28,6 @@ class WelcomePage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 40),
-            // زر الانتقال للخريطة
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
