@@ -18,8 +18,8 @@ class WelcomePage extends StatelessWidget {
               height: 200,
               fit: BoxFit.contain,
             ),
-            const SizedBox(height: 20),
-            const Text(
+            SizedBox(height: 20),
+            Text(
               'Vaigo',
               style: TextStyle(
                 fontSize: 30,
@@ -27,22 +27,22 @@ class WelcomePage extends StatelessWidget {
                 color: Colors.deepPurple,
               ),
             ),
-            const SizedBox(height: 40),
+            SizedBox(height: 40),
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const HomeMapPage()),
+                  MaterialPageRoute(builder: (context) => HomeMapPage()),
                 );
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.deepPurple,
-                padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30),
                 ),
               ),
-              child: const Text(
+              child: Text(
                 'Commencer',
                 style: TextStyle(
                   fontSize: 18,
