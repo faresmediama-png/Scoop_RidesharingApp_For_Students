@@ -41,7 +41,7 @@ class WelcomePage extends StatelessWidget {
             const SizedBox(height: 20),
             // اسم التطبيق
             const Text(
-              'Vaigô',
+              'Vaigo',
               style: TextStyle(
                 fontSize: 30,
                 fontWeight: FontWeight.bold,
