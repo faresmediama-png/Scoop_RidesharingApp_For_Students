@@ -1,7 +1,5 @@
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_date_picker_timeline/date_picker_timeline.dart';
-import 'data.dart';
 
 class StudentSelectPage extends StatefulWidget {
   const StudentSelectPage({Key? key}) : super(key: key);
@@ -41,7 +39,6 @@ class _StudentSelectPageState extends State<StudentSelectPage> {
     'خريبكة (Khouribga)',
     'الناظور (Nador)',
     'العيون (Laâyoune)',
-    'وجدة (Oujda)',
   ];
 
   // قائمة بأشكال/أنواع السيارات المتداولة
@@ -76,6 +73,21 @@ class _StudentSelectPageState extends State<StudentSelectPage> {
     if (picked != null && picked != _selectedTime) {
       setState(() {
         _selectedTime = picked;
+      });
+    }
+  }
+
+  // دالة لاختيار التاريخ
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: _selectedDate,
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now().add(const Duration(days: 90)),
+    );
+    if (picked != null && picked != _selectedDate) {
+      setState(() {
+        _selectedDate = picked;
       });
     }
   }
@@ -150,18 +162,19 @@ class _StudentSelectPageState extends State<StudentSelectPage> {
             const SizedBox(height: 20),
 
             // 3. تاريخ السفر
-            const Text(
-              "تاريخ السفر:",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-            ),
-            const SizedBox(height: 10),
-            DatePickerTimeline(
-              DateTime.now(),
-              onDateChange: (date) {
-                setState(() {
-                  _selectedDate = date;
-                });
-              },
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "تاريخ السفر: ${_selectedDate.toLocal().toString().split(' ')[0]}",
+                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                ),
+                ElevatedButton.icon(
+                  onPressed: () => _selectDate(context),
+                  icon: const Icon(Icons.calendar_today),
+                  label: const Text("اختر التاريخ"),
+                ),
+              ],
             ),
 
             const SizedBox(height: 20),
@@ -274,7 +287,7 @@ class _StudentSelectPageState extends State<StudentSelectPage> {
         selectedIndex: _selectedIndex,
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         showElevation: false,
-        backgroundColor: Palette.bottomGray,
+        backgroundColor: Colors.grey[200]!,
         onItemSelected: (index) => setState(() {
           _selectedIndex = index;
           _pageController.animateToPage(
