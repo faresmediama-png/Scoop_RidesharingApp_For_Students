@@ -1,19 +1,59 @@
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:date_picker_timeline/date_picker_timeline.dart';
-
+import 'package:flutter_date_picker_timeline/date_picker_timeline.dart';
 import 'data.dart';
 
 class StudentSelectPage extends StatefulWidget {
+  const StudentSelectPage({Key? key}) : super(key: key);
+
   @override
-  _StudentSelectPageState createState() => _StudentSelectPageState();
+  State<StudentSelectPage> createState() => _StudentSelectPageState();
 }
 
 class _StudentSelectPageState extends State<StudentSelectPage> {
   int _selectedIndex = 0;
-  PageController _pageController;
-  String _pickUpValue;
-  String _dropOffValue;
+  late PageController _pageController;
+
+  // البيانات الخاصة بالرحلة
+  String? _departureCity;
+  String? _destinationCity;
+  DateTime _selectedDate = DateTime.now();
+  TimeOfDay? _selectedTime;
+  String? _carType;
+  double _price = 50; // السعر الافتراضي بالدرهم
+  String _estimatedDuration = "ساعتان"; // مدة الوصول التقديرية
+
+  // قائمة بأهم المدن المغربية
+  final List<String> _moroccanCities = [
+    'الدار البيضاء (Casablanca)',
+    'الرباط (Rabat)',
+    'طنجة (Tanger)',
+    'مراكش (Marrakech)',
+    'فاس (Fès)',
+    'أكادير (Agadir)',
+    'مكناس (Meknès)',
+    'وجدة (Oujda)',
+    'تطوان (Tétouan)',
+    'القنيطرة (Kénitra)',
+    'الجديدة (El Jadida)',
+    'آسفي (Safi)',
+    'بني ملال (Béni Mellal)',
+    'خريبكة (Khouribga)',
+    'الناظور (Nador)',
+    'العيون (Laâyoune)',
+    'وجدة (Oujda)',
+  ];
+
+  // قائمة بأشكال/أنواع السيارات المتداولة
+  final List<String> _carTypesList = [
+    'Dacia Logan',
+    'Dacia Sandero',
+    'Peugeot 208',
+    'Renault Clio',
+    'Volkswagen Golf',
+    'Hyundai Accent',
+    'سيارة مريحة (Comfort)',
+  ];
 
   @override
   void initState() {
@@ -27,242 +67,236 @@ class _StudentSelectPageState extends State<StudentSelectPage> {
     super.dispose();
   }
 
+  // دالة لاختيار التوقيت
+  Future<void> _selectTime(BuildContext context) async {
+    final TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+    if (picked != null && picked != _selectedTime) {
+      setState(() {
+        _selectedTime = picked;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      //extendBody: true,
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 6),
-            child: Row(
-              children: <Widget>[
-                Icon(
-                  Icons.add_location,
-                  color: Colors.red,
-                  size: 35,
-                ),
-                Text(
-                  "Select Pick-Up Location: ",
-                  style: mediumGreyDropText,
-                ),
-              ],
+      appBar: AppBar(
+        title: const Text("السفر بين المدن - Covoiturage"),
+        centerTitle: true,
+        backgroundColor: Colors.blueAccent,
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            // 1. مدينة الانطلاق
+            const Text(
+              "مدينة الانطلاق:",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 40),
-            child: DropdownButton<String>(
-              value: _pickUpValue,
-              // hint: Text(
-              //   "Pick - Up Location",
-              //   style: mediumGreyDropText,
-              // ),
-              icon: Icon(Icons.arrow_downward),
-              iconSize: 40,
-              elevation: 8,
-              style: mediumBlack,
-              onChanged: (String newValue) {
-                _pickUpValue = newValue;
-                setState(() {});
-              },
-              items: [
-                DropdownMenuItem(
-                  value: "York University",
-                  child: Text(
-                    "York University",
-                    style: mediumGreyDropText,
-                  ),
-                ),
-                DropdownMenuItem(
-                  value: "Unversity ofToronto",
-                  child: Text(
-                    "Unversity of Toronto",
-                    style: mediumGreyDropText,
-                  ),
-                ),
-                DropdownMenuItem(
-                  value: "University of Waterloo",
-                  child: Text(
-                    "University of Waterloo",
-                    style: mediumGreyDropText,
-                  ),
-                ),
-                DropdownMenuItem(
-                  value: "McMaster University",
-                  child: Text(
-                    "McMaster University",
-                    style: mediumGreyDropText,
-                  ),
-                ),
-                DropdownMenuItem(
-                  value: "Queens University",
-                  child: Text(
-                    "Queens University",
-                    style: mediumGreyDropText,
-                  ),
-                ),
-                DropdownMenuItem(
-                  value: "University of Ottawa",
-                  child: Text(
-                    "University of Ottawa",
-                    style: mediumGreyDropText,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(),
-            child: Row(
-              children: <Widget>[
-                Icon(
-                  Icons.add_location,
-                  color: Colors.blue,
-                  size: 35,
-                ),
-                Text(
-                  "Select DropOff Location: ",
-                  style: mediumGreyDropText,
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 6),
-            child: DropdownButton<String>(
-              value: _dropOffValue,
-              // hint: Text(
-              //   "Pick - Up Location",
-              //   style: mediumGreyDropText,
-              // ),
-              icon: Icon(
-                Icons.arrow_downward,
-                color: Colors.grey,
+            const SizedBox(height: 5),
+            DropdownButtonFormField<String>(
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.location_on, color: Colors.green),
               ),
-              iconSize: 40,
-              elevation: 8,
-              style: mediumBlack,
-              onChanged: (String newValue) {
-                _dropOffValue = newValue;
-                setState(() {});
+              hint: const Text("اختر مدينة الانطلاق"),
+              value: _departureCity,
+              onChanged: (String? newValue) {
+                setState(() {
+                  _departureCity = newValue;
+                });
               },
-              items: [
-                DropdownMenuItem(
-                  value: "York University",
-                  child: Text(
-                    "York University",
-                    style: mediumGreyDropText,
-                  ),
-                ),
-                DropdownMenuItem(
-                  value: "Unversity ofToronto",
-                  child: Text(
-                    "Unversity of Toronto",
-                    style: mediumGreyDropText,
-                  ),
-                ),
-                DropdownMenuItem(
-                  value: "University of Waterloo",
-                  child: Text(
-                    "University of Waterloo",
-                    style: mediumGreyDropText,
-                  ),
-                ),
-                DropdownMenuItem(
-                  value: "McMaster University",
-                  child: Text(
-                    "McMaster University",
-                    style: mediumGreyDropText,
-                  ),
-                ),
-                DropdownMenuItem(
-                  value: "Queens University",
-                  child: Text(
-                    "Queens University",
-                    style: mediumGreyDropText,
-                  ),
-                ),
-                DropdownMenuItem(
-                  value: "University of Ottawa",
-                  child: Text(
-                    "University of Ottawa",
-                    style: mediumGreyDropText,
-                  ),
-                ),
-                DropdownMenuItem(
-                  value: "Union Station",
-                  child: Text(
-                    "Union Station",
-                    style: mediumGreyDropText,
-                  ),
-                ),
-                DropdownMenuItem(
-                  value: "Hamilton",
-                  child: Text(
-                    "Hamilton",
-                    style: mediumGreyDropText,
-                  ),
-                ),
-                DropdownMenuItem(
-                  value: "Scarborough",
-                  child: Text(
-                    "Scarborough",
-                    style: mediumGreyDropText,
-                  ),
-                ),
-              ],
+              items: _moroccanCities.map((String city) {
+                return DropdownMenuItem<String>(
+                  value: city,
+                  child: Text(city),
+                );
+              }).toList(),
             ),
-          ),
-          Container(
-            child: DatePickerTimeline(
+
+            const SizedBox(height: 15),
+
+            // 2. مدينة الوصول
+            const Text(
+              "مدينة الوصول:",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            ),
+            const SizedBox(height: 5),
+            DropdownButtonFormField<String>(
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.flag, color: Colors.red),
+              ),
+              hint: const Text("اختر مدينة الوصول"),
+              value: _destinationCity,
+              onChanged: (String? newValue) {
+                setState(() {
+                  _destinationCity = newValue;
+                });
+              },
+              items: _moroccanCities.map((String city) {
+                return DropdownMenuItem<String>(
+                  value: city,
+                  child: Text(city),
+                );
+              }).toList(),
+            ),
+
+            const SizedBox(height: 20),
+
+            // 3. تاريخ السفر
+            const Text(
+              "تاريخ السفر:",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            ),
+            const SizedBox(height: 10),
+            DatePickerTimeline(
               DateTime.now(),
               onDateChange: (date) {
-                print(date.day.toString());
+                setState(() {
+                  _selectedDate = date;
+                });
               },
             ),
-          ),
-        ],
-      ),
 
+            const SizedBox(height: 20),
+
+            // 4. توقيت الانطلاق
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  _selectedTime == null
+                      ? "توقيت الانطلاق: غير محدد"
+                      : "توقيت الانطلاق: ${_selectedTime!.format(context)}",
+                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                ),
+                ElevatedButton.icon(
+                  onPressed: () => _selectTime(context),
+                  icon: const Icon(Icons.access_time),
+                  label: const Text("اختر الوقت"),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 15),
+
+            // 5. نوع السيارة
+            const Text(
+              "نوع السيارة:",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            ),
+            const SizedBox(height: 5),
+            DropdownButtonFormField<String>(
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.directions_car, color: Colors.blue),
+              ),
+              hint: const Text("اختر نوع السيارة"),
+              value: _carType,
+              onChanged: (String? newValue) {
+                setState(() {
+                  _carType = newValue;
+                });
+              },
+              items: _carTypesList.map((String car) {
+                return DropdownMenuItem<String>(
+                  value: car,
+                  child: Text(car),
+                );
+              }).toList(),
+            ),
+
+            const SizedBox(height: 15),
+
+            // 6. مدة الوصول التقديرية
+            TextFormField(
+              decoration: const InputDecoration(
+                labelText: "مدة الوصول التقديرية (مثال: 3 ساعات)",
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.timer),
+              ),
+              onChanged: (val) {
+                _estimatedDuration = val;
+              },
+            ),
+
+            const SizedBox(height: 20),
+
+            // 7. السعر المقترح للراكب (بالدرهم المغربي DH)
+            Text(
+              "السعر المقترح: ${_price.toInt()} DH",
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            ),
+            Slider(
+              value: _price,
+              min: 20,
+              max: 500,
+              divisions: 48,
+              label: "${_price.toInt()} DH",
+              onChanged: (double value) {
+                setState(() {
+                  _price = value;
+                });
+              },
+            ),
+
+            const SizedBox(height: 20),
+
+            // زر التأكيد/البحث
+            SizedBox(
+              width: double.infinity,
+              height: 50,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blueAccent,
+                ),
+                onPressed: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text("تم تسجيل معلومات الرحلة بنجاح")),
+                  );
+                },
+                child: const Text(
+                  "بحث / نشر الرحلة",
+                  style: TextStyle(fontSize: 18, color: Colors.white),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
       bottomNavigationBar: BottomNavyBar(
         selectedIndex: _selectedIndex,
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        showElevation: false, // use this to remove appBar's elevation
-        backgroundColor: Pallete.bottomGrey,
-        onItemSelected: (index) => setState(
-          () {
-            _selectedIndex = 0;
-            _pageController.animateToPage(
-              0,
-              duration: Duration(milliseconds: 300),
-              curve: Curves.ease,
-            );
-          },
-        ),
+        showElevation: false,
+        backgroundColor: Palette.bottomGray,
+        onItemSelected: (index) => setState(() {
+          _selectedIndex = index;
+          _pageController.animateToPage(
+            index,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.ease,
+          );
+        }),
         items: [
           BottomNavyBarItem(
-            icon: Icon(
-              Icons.home,
-              size: 30,
-            ),
-            title: Text(
-              'Home',
-              style: navBarText,
-            ),
-            textAlign: TextAlign.center,
+            icon: const Icon(Icons.home),
+            title: const Text('الرئيسية'),
             activeColor: Colors.red,
           ),
           BottomNavyBarItem(
-            icon: Icon(Icons.search),
-            title: Text('Users'),
-            textAlign: TextAlign.center,
+            icon: const Icon(Icons.search),
+            title: const Text('الرحلات'),
             activeColor: Colors.purpleAccent,
           ),
           BottomNavyBarItem(
-            icon: Icon(Icons.person_outline),
-            title: Text('Settings'),
-            textAlign: TextAlign.center,
+            icon: const Icon(Icons.person_outline),
+            title: const Text('حسابي'),
             activeColor: Colors.blue,
           ),
         ],
