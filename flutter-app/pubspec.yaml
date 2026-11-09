@@ -1,4 +1,4 @@
-name: scoop_ridesharingapp_for_students
+name: scoop_ridesharringapp_for_students
 description: A new Flutter application.
 
 version: 1.0.0+1
@@ -19,6 +19,9 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+  assets:
+    - assets/images/
 
   fonts:
     - family: Quicksand
