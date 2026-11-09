@@ -11,6 +11,6 @@ workflows:
           flutter pub get
       - name: Build APK for Vaigo
         script: |
-          flutter build apk --release
+          flutter build apk --release --ignore-deprecation
     artifacts:
       - build/app/outputs/flutter-apk/app-release.apk
