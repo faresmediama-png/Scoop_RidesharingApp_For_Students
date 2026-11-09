@@ -3,7 +3,8 @@ workflows:
     name: Android Workflow
     max_build_duration: 30
     environment:
-      flutter: 3.0.5
+      flutter: 2.10.3
+      java: 1.11
     working_directory: flutter-app
     scripts:
       - name: Get flutter packages
