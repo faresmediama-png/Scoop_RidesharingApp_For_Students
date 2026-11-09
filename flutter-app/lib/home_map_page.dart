@@ -8,38 +8,33 @@ class HomeMapPage extends StatelessWidget {
     return Scaffold(
       body: Stack(
         children: [
-          // 1. الخريطة في الخلفية (يمكن ربطها مستقبلاً بـ Google Maps)
           Container(
             color: Colors.grey[200],
-            child: const Center(
+            child: Center(
               child: Text(
                 'الخريطة التفاعلية Vaigo',
                 style: TextStyle(color: Colors.black45, fontSize: 16),
               ),
             ),
           ),
-
-          // زر القائمة العلوية (Drawer/Menu)
           Positioned(
             top: 50,
             left: 20,
             child: CircleAvatar(
               backgroundColor: Colors.white,
               child: IconButton(
-                icon: const Icon(Icons.menu, color: Colors.black),
+                icon: Icon(Icons.menu, color: Colors.black),
                 onPressed: () {},
               ),
             ),
           ),
-
-          // 2. اللوحة السفلية البيضاء (Bottom Sheet)
           Positioned(
             bottom: 0,
             left: 0,
             right: 0,
             child: Container(
-              padding: const EdgeInsets.all(20.0),
-              decoration: const BoxDecoration(
+              padding: EdgeInsets.all(20.0),
+              decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(25),
@@ -57,7 +52,6 @@ class HomeMapPage extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // شريط السحب الصغير
                   Center(
                     child: Container(
                       width: 40,
@@ -68,9 +62,7 @@ class HomeMapPage extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 15),
-
-                  // أنواع وسائل النقل (Course, Moto, Confort)
+                  SizedBox(height: 15),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
@@ -79,17 +71,15 @@ class HomeMapPage extends StatelessWidget {
                       _buildOption(Icons.no_drinks, 'Confort', false),
                     ],
                   ),
-                  const SizedBox(height: 20),
-
-                  // خانة البحث "Où et pour combien ?"
+                  SizedBox(height: 20),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
+                    padding: EdgeInsets.symmetric(horizontal: 15, vertical: 12),
                     decoration: BoxDecoration(
                       color: Colors.grey[100],
                       borderRadius: BorderRadius.circular(30),
                     ),
                     child: Row(
-                      children: const [
+                      children: [
                         Icon(Icons.search, color: Colors.black54),
                         SizedBox(width: 10),
                         Text(
@@ -103,13 +93,11 @@ class HomeMapPage extends StatelessWidget {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 20),
-
-                  // الوجهات السابقة المقترحة
+                  SizedBox(height: 20),
                   _buildLocationRow('Hopital Ibn Sina', '7,8 km'),
-                  const Divider(),
+                  Divider(),
                   _buildLocationRow('Av. de Suez', '29,2 km'),
-                  const Divider(),
+                  Divider(),
                   _buildLocationRow('Rue Souika, Médina de Rabat', '3,3 km'),
                 ],
               ),
@@ -124,7 +112,7 @@ class HomeMapPage extends StatelessWidget {
     return Column(
       children: [
         Container(
-          padding: const EdgeInsets.all(14),
+          padding: EdgeInsets.all(14),
           decoration: BoxDecoration(
             color: isSelected ? Colors.blue[50] : Colors.grey[100],
             borderRadius: BorderRadius.circular(16),
@@ -139,7 +127,7 @@ class HomeMapPage extends StatelessWidget {
             size: 28,
           ),
         ),
-        const SizedBox(height: 6),
+        SizedBox(height: 6),
         Text(
           label,
           style: TextStyle(
@@ -153,20 +141,20 @@ class HomeMapPage extends StatelessWidget {
 
   Widget _buildLocationRow(String title, String distance) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6.0),
+      padding: EdgeInsets.symmetric(vertical: 6.0),
       child: Row(
         children: [
-          const Icon(Icons.access_time, color: Colors.grey, size: 20),
-          const SizedBox(width: 12),
+          Icon(Icons.access_time, color: Colors.grey, size: 20),
+          SizedBox(width: 12),
           Expanded(
             child: Text(
               title,
-              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
             ),
           ),
           Text(
             distance,
-            style: const TextStyle(color: Colors.grey, fontSize: 13),
+            style: TextStyle(color: Colors.grey, fontSize: 13),
           ),
         ],
       ),
