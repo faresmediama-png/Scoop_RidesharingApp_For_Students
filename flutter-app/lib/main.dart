@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'welcome_page.dart'; // استدعاء صفحة البداية Vaigo
+import 'Welcome_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.deepPurple,
       ),
-      home: WelcomePage(), // هنا فين كيبدأ التطبيق
+      home: const WelcomePage(),
     );
   }
 }
