@@ -10,16 +10,15 @@ class StudentSelectPage extends StatefulWidget {
 
 class _StudentSelectPageState extends State<StudentSelectPage> {
   int _selectedIndex = 0;
-  late PageController _pageController;
+  PageController _pageController = PageController();
 
   // البيانات الخاصة بالرحلة
-  String? _departureCity;
-  String? _destinationCity;
-  DateTime _selectedDate = DateTime.now();
-  TimeOfDay? _selectedTime;
-  String? _carType;
-  double _price = 50; // السعر الافتراضي بالدرهم
-  String _estimatedDuration = "ساعتان"; // مدة الوصول التقديرية
+  String _departureCity = 'الدار البيضاء (Casablanca)';
+  String _destinationCity = 'الرباط (Rabat)';
+  String _selectedDateText = 'اختر التاريخ';
+  String _selectedTimeText = 'اختر الوقت';
+  String _carType = 'Dacia Logan';
+  double _price = 50;
 
   // قائمة بأهم المدن المغربية
   final List<String> _moroccanCities = [
@@ -53,12 +52,6 @@ class _StudentSelectPageState extends State<StudentSelectPage> {
   ];
 
   @override
-  void initState() {
-    super.initState();
-    _pageController = PageController();
-  }
-
-  @override
   void dispose() {
     _pageController.dispose();
     super.dispose();
@@ -70,9 +63,9 @@ class _StudentSelectPageState extends State<StudentSelectPage> {
       context: context,
       initialTime: TimeOfDay.now(),
     );
-    if (picked != null && picked != _selectedTime) {
+    if (picked != null) {
       setState(() {
-        _selectedTime = picked;
+        _selectedTimeText = picked.format(context);
       });
     }
   }
@@ -81,13 +74,13 @@ class _StudentSelectPageState extends State<StudentSelectPage> {
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: _selectedDate,
+      initialDate: DateTime.now(),
       firstDate: DateTime.now(),
       lastDate: DateTime.now().add(const Duration(days: 90)),
     );
-    if (picked != null && picked != _selectedDate) {
+    if (picked != null) {
       setState(() {
-        _selectedDate = picked;
+        _selectedDateText = picked.toLocal().toString().split(' ')[0];
       });
     }
   }
@@ -98,7 +91,7 @@ class _StudentSelectPageState extends State<StudentSelectPage> {
       appBar: AppBar(
         title: const Text("السفر بين المدن - Covoiturage"),
         centerTitle: true,
-        backgroundColor: Colors.blueAccent,
+        backgroundColor: Colors.blue,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -116,12 +109,13 @@ class _StudentSelectPageState extends State<StudentSelectPage> {
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.location_on, color: Colors.green),
               ),
-              hint: const Text("اختر مدينة الانطلاق"),
               value: _departureCity,
               onChanged: (String? newValue) {
-                setState(() {
-                  _departureCity = newValue;
-                });
+                if (newValue != null) {
+                  setState(() {
+                    _departureCity = newValue;
+                  });
+                }
               },
               items: _moroccanCities.map((String city) {
                 return DropdownMenuItem<String>(
@@ -144,12 +138,13 @@ class _StudentSelectPageState extends State<StudentSelectPage> {
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.flag, color: Colors.red),
               ),
-              hint: const Text("اختر مدينة الوصول"),
               value: _destinationCity,
               onChanged: (String? newValue) {
-                setState(() {
-                  _destinationCity = newValue;
-                });
+                if (newValue != null) {
+                  setState(() {
+                    _destinationCity = newValue;
+                  });
+                }
               },
               items: _moroccanCities.map((String city) {
                 return DropdownMenuItem<String>(
@@ -166,7 +161,7 @@ class _StudentSelectPageState extends State<StudentSelectPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "تاريخ السفر: ${_selectedDate.toLocal().toString().split(' ')[0]}",
+                  "تاريخ السفر: $_selectedDateText",
                   style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                 ),
                 ElevatedButton.icon(
@@ -184,9 +179,7 @@ class _StudentSelectPageState extends State<StudentSelectPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  _selectedTime == null
-                      ? "توقيت الانطلاق: غير محدد"
-                      : "توقيت الانطلاق: ${_selectedTime!.format(context)}",
+                  "توقيت الانطلاق: $_selectedTimeText",
                   style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                 ),
                 ElevatedButton.icon(
@@ -210,12 +203,13 @@ class _StudentSelectPageState extends State<StudentSelectPage> {
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.directions_car, color: Colors.blue),
               ),
-              hint: const Text("اختر نوع السيارة"),
               value: _carType,
               onChanged: (String? newValue) {
-                setState(() {
-                  _carType = newValue;
-                });
+                if (newValue != null) {
+                  setState(() {
+                    _carType = newValue;
+                  });
+                }
               },
               items: _carTypesList.map((String car) {
                 return DropdownMenuItem<String>(
@@ -234,9 +228,6 @@ class _StudentSelectPageState extends State<StudentSelectPage> {
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.timer),
               ),
-              onChanged: (val) {
-                _estimatedDuration = val;
-              },
             ),
 
             const SizedBox(height: 20),
@@ -267,7 +258,7 @@ class _StudentSelectPageState extends State<StudentSelectPage> {
               height: 50,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blueAccent,
+                  backgroundColor: Colors.blue,
                 ),
                 onPressed: () {
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -287,7 +278,6 @@ class _StudentSelectPageState extends State<StudentSelectPage> {
         selectedIndex: _selectedIndex,
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         showElevation: false,
-        backgroundColor: Colors.grey[200]!,
         onItemSelected: (index) => setState(() {
           _selectedIndex = index;
           _pageController.animateToPage(
