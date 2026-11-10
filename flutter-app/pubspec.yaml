@@ -34,6 +34,6 @@ flutter:
 
 # إعدادات الأيقونة الخاصة بالتطبيق
 flutter_icons:
-  image_path: "assets/images/your_logo.png"
+  image_path: "assets/images/1794256694210.jpg"
   android: true
   ios: true
