@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'welcome_page.dart';
+import 'splash_screen_one.dart'; // استيراد الشاشة الأولى
 
 void main() {
   runApp(const MyApp());
@@ -12,11 +12,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Vaigo Covoiturage',
+      title: 'vaigo',
       theme: ThemeData(
         primarySwatch: Colors.deepPurple,
       ),
-      home: const WelcomePage(),
+      home: const SplashScreenOne(), // جعل التطبيق يبدأ من الشاشة التمهيدية
     );
   }
 }
