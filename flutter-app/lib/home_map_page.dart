@@ -1,7 +1,23 @@
 import 'package:flutter/material.dart';
+import 'app_colors.dart';
+import 'search_route_modal.dart'; // سنقوم بإنشاء هذا الملف أيضاً
 
-class HomeMapPage extends StatelessWidget {
+class HomeMapPage extends StatefulWidget {
   const HomeMapPage({Key? key}) : super(key: key);
+
+  @override
+  State<HomeMapPage> createState() => _HomeMapPageState();
+}
+
+class _HomeMapPageState extends State<HomeMapPage> {
+  int selectedCategoryIndex = 0;
+
+  final List> categories = [
+    {'title': 'Course', 'icon': Icons.directions_car_filled},
+    {'title': 'Moto', 'icon': Icons.two_wheeler},
+    {'title': 'Confort', 'icon': Icons.time_to_leave},
+    {'title': 'Course+', 'icon': Icons.local_taxi},
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -9,96 +25,140 @@ class HomeMapPage extends StatelessWidget {
       body: Stack(
         children: [
           Container(
-            color: Colors.grey[200],
-            child: Center(
+            color: AppColors.lightGrayBackground,
+            child: const Center(
               child: Text(
-                'الخريطة التفاعلية Vaigo',
-                style: TextStyle(color: Colors.black45, fontSize: 16),
+                'Google Maps View',
+                style: TextStyle(color: Colors.grey, fontSize: 18),
               ),
             ),
           ),
           Positioned(
             top: 50,
-            left: 20,
+            left: 16,
             child: CircleAvatar(
-              backgroundColor: Colors.white,
+              backgroundColor: AppColors.whiteBackground,
+              radius: 24,
               child: IconButton(
-                icon: Icon(Icons.menu, color: Colors.black),
+                icon: const Icon(Icons.menu, color: AppColors.primaryPurple),
                 onPressed: () {},
               ),
             ),
           ),
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
+          Align(
+            alignment: Alignment.bottomCenter,
             child: Container(
-              padding: EdgeInsets.all(20.0),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(25),
-                  topRight: Radius.circular(25),
-                ),
+              decoration: const BoxDecoration(
+                color: AppColors.whiteBackground,
+                borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
                 boxShadow: [
-                  BoxShadow(
-                    color: Colors.black12,
-                    blurRadius: 10,
-                    spreadRadius: 2,
-                  ),
+                  BoxShadow(color: Colors.black12, blurRadius: 10, spreadRadius: 2)
                 ],
               ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Center(
-                    child: Container(
-                      width: 40,
-                      height: 4,
-                      decoration: BoxDecoration(
-                        color: Colors.grey[300],
-                        borderRadius: BorderRadius.circular(10),
+                  const SizedBox(height: 12),
+                  Container(
+                    width: 40,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  SizedBox(
+                    height: 75,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      itemCount: categories.length,
+                      itemBuilder: (context, index) {
+                        bool isSelected = selectedCategoryIndex == index;
+                        return GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              selectedCategoryIndex = index;
+                            });
+                          },
+                          child: Container(
+                            margin: const EdgeInsets.only(right: 12),
+                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                            decoration: BoxDecoration(
+                              color: isSelected
+                                  ? AppColors.secondaryTeal.withOpacity(0.15)
+                                  : Colors.transparent,
+                              borderRadius: BorderRadius.circular(16),
+                              border: isSelected
+                                  ? Border.all(color: AppColors.secondaryTeal, width: 2)
+                                  : null,
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  categories[index]['icon'],
+                                  color: isSelected
+                                      ? AppColors.primaryPurple
+                                      : Colors.grey[600],
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  categories[index]['title'],
+                                  style: TextStyle(
+                                    fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                                    color: isSelected ? AppColors.primaryPurple : Colors.black,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: InkWell(
+                      onTap: () {
+                        showModalBottomSheet(
+                          context: context,
+                          isScrollControlled: true,
+                          backgroundColor: Colors.transparent,
+                          builder: (context) => const SearchRouteModal(),
+                        );
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                        decoration: BoxDecoration(
+                          color: AppColors.lightGrayBackground,
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Row(
+                          children: const [
+                            Icon(Icons.search, size: 24, color: AppColors.primaryPurple),
+                            SizedBox(width: 12),
+                            Text(
+                              'Où et pour combien ?',
+                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                  SizedBox(height: 15),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      _buildOption(Icons.directions_car, 'Course', true),
-                      _buildOption(Icons.two_wheeler, 'Moto', false),
-                      _buildOption(Icons.no_drinks, 'Confort', false),
-                    ],
-                  ),
-                  SizedBox(height: 20),
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 15, vertical: 12),
-                    decoration: BoxDecoration(
-                      color: Colors.grey[100],
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    child: Row(
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
                       children: [
-                        Icon(Icons.search, color: Colors.black54),
-                        SizedBox(width: 10),
-                        Text(
-                          'Où et pour combien ?',
-                          style: TextStyle(
-                            color: Colors.black54,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
+                        _buildRecentItem('Hopital Ibn Sina', '7,8 km'),
+                        _buildRecentItem('Av. de Suez', '29,2 km'),
                       ],
                     ),
                   ),
-                  SizedBox(height: 20),
-                  _buildLocationRow('Hopital Ibn Sina', '7,8 km'),
-                  Divider(),
-                  _buildLocationRow('Av. de Suez', '29,2 km'),
-                  Divider(),
-                  _buildLocationRow('Rue Souika, Médina de Rabat', '3,3 km'),
                 ],
               ),
             ),
@@ -108,54 +168,20 @@ class HomeMapPage extends StatelessWidget {
     );
   }
 
-  Widget _buildOption(IconData icon, String label, bool isSelected) {
-    return Column(
-      children: [
-        Container(
-          padding: EdgeInsets.all(14),
-          decoration: BoxDecoration(
-            color: isSelected ? Colors.blue[50] : Colors.grey[100],
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(
-              color: isSelected ? Colors.blue : Colors.transparent,
-              width: 1.5,
-            ),
-          ),
-          child: Icon(
-            icon,
-            color: isSelected ? Colors.blue : Colors.black87,
-            size: 28,
-          ),
-        ),
-        SizedBox(height: 6),
-        Text(
-          label,
-          style: TextStyle(
-            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-            color: isSelected ? Colors.blue : Colors.black87,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildLocationRow(String title, String distance) {
+  Widget _buildRecentItem(String title, String distance) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 6.0),
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
         children: [
-          Icon(Icons.access_time, color: Colors.grey, size: 20),
-          SizedBox(width: 12),
+          const Icon(Icons.access_time, color: AppColors.secondaryTeal),
+          const SizedBox(width: 12),
           Expanded(
             child: Text(
               title,
-              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
             ),
           ),
-          Text(
-            distance,
-            style: TextStyle(color: Colors.grey, fontSize: 13),
-          ),
+          Text(distance, style: const TextStyle(color: Colors.grey)),
         ],
       ),
     );
