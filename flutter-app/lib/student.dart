@@ -1,12 +1,12 @@
-import 'package:flutter/material.dart';
-import 'package:nice_button/nice_button.dart';
-import 'studentInterface.dart';
 
+import 'package:flutter/material.dart';
+import 'studentInterface.dart';
 import 'data.dart';
 
 class StudentSignUpPage extends StatefulWidget {
   @override
-  _StudentSignUpPageState createState() => _StudentSignUpPageState();
+  _StudentSignUpPageState createState() =>
+      _StudentSignUpPageState();
 }
 
 class _StudentSignUpPageState extends State<StudentSignUpPage> {
@@ -15,7 +15,8 @@ class _StudentSignUpPageState extends State<StudentSignUpPage> {
   final numberControl = TextEditingController();
   final passwordControl = TextEditingController();
 
-  Padding inputBox(String t, TextEditingController myController, bool pass) {
+  Padding inputBox(
+      String t, TextEditingController myController, bool pass) {
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: Container(
@@ -24,14 +25,14 @@ class _StudentSignUpPageState extends State<StudentSignUpPage> {
         child: TextField(
           controller: myController,
           obscureText: pass,
-          decoration: new InputDecoration(
-            border: new OutlineInputBorder(
-              borderRadius: const BorderRadius.all(
-                const Radius.circular(24),
+          decoration: InputDecoration(
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.all(
+                Radius.circular(24),
               ),
             ),
             filled: true,
-            hintStyle: new TextStyle(color: Colors.grey),
+            hintStyle: TextStyle(color: Colors.grey),
             hintText: t,
           ),
         ),
@@ -39,15 +40,12 @@ class _StudentSignUpPageState extends State<StudentSignUpPage> {
     );
   }
 
-  //Padding niceButton(String t, List<Colors> l) {}
-
   @override
   void dispose() {
     nameControl.dispose();
     emailControl.dispose();
     numberControl.dispose();
     passwordControl.dispose();
-
     super.dispose();
   }
 
@@ -60,12 +58,14 @@ class _StudentSignUpPageState extends State<StudentSignUpPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Padding(
-                padding: const EdgeInsets.only(top: 10.0, bottom: 20),
+                padding: const EdgeInsets.only(
+                    top: 10.0, bottom: 20),
                 child: Text(
                   'Hello Student,',
                   style: blackHeader,
                 ),
               ),
+
               Padding(
                 padding: const EdgeInsets.only(bottom: 30),
                 child: Text(
@@ -74,40 +74,70 @@ class _StudentSignUpPageState extends State<StudentSignUpPage> {
                   textAlign: TextAlign.center,
                 ),
               ),
+
               inputBox("Full Name", nameControl, false),
               inputBox("Email Address", emailControl, false),
               inputBox("Mobile Number", numberControl, false),
               inputBox("Password", passwordControl, true),
+
               Padding(
                 padding: EdgeInsets.only(top: 0, bottom: 5),
                 child: Text(
-                  "Please enter a minmium of eight characters",
+                  "Please enter a minimum of eight characters",
                   textAlign: TextAlign.left,
                   style: smallText,
                 ),
               ),
+
               Padding(
                 padding: const EdgeInsets.all(20.0),
-                child: NiceButton(
-                  padding: EdgeInsets.symmetric(vertical: 15),
+                child: Container(
                   width: 350,
-                  elevation: 8.0,
-                  radius: 24,
-                  text: "Ready to Scoop",
-                  background: null,
-                  gradientColors: [
-                    Pallete.studetGreen,
-                    Pallete.mainBlue,
-                  ],
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => StudentSelectPage()),
-                    );
-                  },
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(24),
+                    gradient: LinearGradient(
+                      colors: [
+                        Pallete.studetGreen,
+                        Pallete.mainBlue,
+                      ],
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black26,
+                        blurRadius: 8,
+                        offset: Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.transparent,
+                      shadowColor: Colors.transparent,
+                      padding: EdgeInsets.symmetric(vertical: 15),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(24),
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              StudentSelectPage(),
+                        ),
+                      );
+                    },
+                    child: Text(
+                      "Ready to Scoop",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
                 ),
               ),
+
               Padding(
                 padding: EdgeInsets.only(top: 10),
                 child: Text(
