@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'app_colors.dart';
 import 'home_map_page.dart';
+import 'otp_verification_page.dart';
 
 class AuthPage extends StatelessWidget {
   const AuthPage({Key? key}) : super(key: key);
@@ -114,7 +115,7 @@ class AuthPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 12),
 
-                  // زر المتابعة برقم الهاتف
+                  // زر المتابعة برقم الهاتف (يوجه مباشرة لصفحة الـ OTP)
                   SizedBox(
                     width: double.infinity,
                     height: 52,
@@ -127,10 +128,10 @@ class AuthPage extends StatelessWidget {
                         side: BorderSide.none,
                       ),
                       onPressed: () {
-                        Navigator.pushReplacement(
+                        Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (_) => const HomeMapPage(),
+                            builder: (_) => const OtpVerificationPage(),
                           ),
                         );
                       },
