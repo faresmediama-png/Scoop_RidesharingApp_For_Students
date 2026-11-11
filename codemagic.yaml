@@ -6,6 +6,9 @@ workflows:
       flutter: 3.24.5
     working_directory: flutter-app
     scripts:
+      - name: Clean project cache
+        script: |
+          flutter clean
       - name: Get flutter packages
         script: |
           flutter pub get
