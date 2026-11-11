@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.deepPurple,
       ),
-      home: const SplashScreenOne(), // جعل التطبيق يبدأ من الشاشة التمهيدية
+      home: const LanguageSelectionPage(), // جعل التطبيق يبدأ من الشاشة التمهيدية
     );
   }
 }
