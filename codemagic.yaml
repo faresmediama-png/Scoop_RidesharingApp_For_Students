@@ -13,8 +13,7 @@ workflows:
         script: |
           flutter pub get
       - name: Build APK for Vaigo
-      script: |
-        flutter build apk --release --verbose
-
+        script: |
+          flutter build apk --release --verbose
     artifacts:
       - build/app/outputs/flutter-apk/app-release.apk
