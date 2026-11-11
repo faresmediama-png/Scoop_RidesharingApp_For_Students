@@ -1,49 +1,52 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'app_colors.dart';
 
-class TrackRidePage extends StatelessWidget {
+class TrackRidePage extends StatefulWidget {
   const TrackRidePage({Key? key}) : super(key: key);
+
+  @override
+  State<TrackRidePage> createState() => _TrackRidePageState();
+}
+
+class _TrackRidePageState extends State<TrackRidePage> {
+  final Completer<GoogleMapController> _controller = Completer();
+
+  // إحداثيات انطلاق تجريبية (يمكن ربطها لاحقاً بـ GPS الحقيقي للسائق)
+  static const CameraPosition _initialPosition = CameraPosition(
+    target: LatLng(34.020882, -6.841650),
+    zoom: 15.0,
+  );
+
+  // ماركر موقع السائق على الخريطة الحقيقية
+  final Set<Marker> _markers = {
+    const Marker(
+      markerId: MarkerId('driver_location'),
+      position: LatLng(34.020882, -6.841650),
+      infoWindow: InfoWindow(title: 'موقع السائق الحالي'),
+    ),
+  };
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.whiteBackground,
       body: Stack(
         children: [
-          // خلفية تحاكي الخريطة (يمكن استبدالها بـ Google Maps لاحقاً)
-          Positioned.fill(
-            child: Container(
-              color: AppColors.lightGrayBackground,
-              child: Stack(
-                children: [
-                  // خط وهمي يمثل مسار الرحلة
-                  Center(
-                    child: Icon(
-                      Icons.map_outlined,
-                      size: 150,
-                      color: Colors.grey.withOpacity(0.3),
-                    ),
-                  ),
-                  // مؤشر موقع السيارة على الخريطة
-                  const Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.directions_car_filled,
-                          size: 45,
-                          color: AppColors.primaryPurple,
-                        ),
-                        SizedBox(height: 35),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
+          // 1. الخريطة الحقيقية لـ Google Maps تعوض الخلفية الوهمية
+          GoogleMap(
+            mapType: MapType.normal,
+            initialCameraPosition: _initialPosition,
+            markers: _markers,
+            myLocationEnabled: true,
+            myLocationButtonEnabled: false,
+            zoomControlsEnabled: false,
+            onMapCreated: (GoogleMapController controller) {
+              _controller.complete(controller);
+            },
           ),
 
-          // زر العودة للأعلى
+          // 2. زر العودة للأعلى
           Positioned(
             top: 50,
             left: 20,
@@ -56,7 +59,7 @@ class TrackRidePage extends StatelessWidget {
             ),
           ),
 
-          // شريط علوي يوضح حالة الرحلة
+          // 3. شريط حالة الرحلة العلوي
           Positioned(
             top: 50,
             right: 20,
@@ -68,7 +71,7 @@ class TrackRidePage extends StatelessWidget {
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
+                    color: Colors.black.withOpacity(0.1),
                     blurRadius: 10,
                     offset: const Offset(0, 4),
                   ),
@@ -78,12 +81,15 @@ class TrackRidePage extends StatelessWidget {
                 children: const [
                   Icon(Icons.radar, color: AppColors.secondaryTeal),
                   SizedBox(width: 10),
-                  Text(
-                    'السائق في طريقه إليك (الوصول خلال 4 دقائق)',
-                    style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.blackText,
+                  Expanded(
+                    child: Text(
+                      'السائق يتحرك نحو موقعك الحقيقي...',
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.blackText,
+                      ),
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 ],
@@ -91,7 +97,7 @@ class TrackRidePage extends StatelessWidget {
             ),
           ),
 
-          // لوحة معلومات السائق والتحكم أسفل الشاشة
+          // 4. لوحة معلومات السائق والسيارة أسفل الشاشة
           Positioned(
             bottom: 0,
             left: 0,
@@ -113,7 +119,6 @@ class TrackRidePage extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // شريط سحب صغير
                   Center(
                     child: Container(
                       width: 40,
@@ -125,8 +130,6 @@ class TrackRidePage extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 20),
-
-                  // معلومات السيارة وسجل اللوحة
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -175,8 +178,6 @@ class TrackRidePage extends StatelessWidget {
                     ],
                   ),
                   const Divider(height: 30),
-
-                  // معلومات السائق
                   Row(
                     children: [
                       const CircleAvatar(
@@ -204,11 +205,8 @@ class TrackRidePage extends StatelessWidget {
                         ],
                       ),
                       const Spacer(),
-                      // أزرار التواصل (اتصال ومراسلة)
                       IconButton(
-                        onPressed: () {
-                          // دالة الاتصال بالسائق
-                        },
+                        onPressed: () {},
                         icon: const Icon(Icons.phone, color: AppColors.secondaryTeal),
                         style: IconButton.styleFrom(
                           backgroundColor: AppColors.secondaryTeal.withOpacity(0.1),
@@ -216,9 +214,7 @@ class TrackRidePage extends StatelessWidget {
                       ),
                       const SizedBox(width: 8),
                       IconButton(
-                        onPressed: () {
-                          // دالة الدردشة
-                        },
+                        onPressed: () {},
                         icon: const Icon(Icons.chat, color: AppColors.primaryPurple),
                         style: IconButton.styleFrom(
                           backgroundColor: AppColors.primaryPurple.withOpacity(0.1),
@@ -227,15 +223,11 @@ class TrackRidePage extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 20),
-
-                  // أزرار الأمان الإضافية (مشاركة الرحلة والطوارئ)
                   Row(
                     children: [
                       Expanded(
                         child: OutlinedButton.icon(
-                          onPressed: () {
-                            // مشاركة تفاصيل الرحلة مع العائلة
-                          },
+                          onPressed: () {},
                           icon: const Icon(Icons.share, size: 18, color: AppColors.primaryPurple),
                           label: const Text(
                             'مشاركة الرحلة',
@@ -253,9 +245,7 @@ class TrackRidePage extends StatelessWidget {
                       const SizedBox(width: 12),
                       Expanded(
                         child: ElevatedButton.icon(
-                          onPressed: () {
-                            // زر الطوارئ
-                          },
+                          onPressed: () {},
                           icon: const Icon(Icons.security, size: 18, color: Colors.white),
                           label: const Text(
                             'طوارئ SOS',
