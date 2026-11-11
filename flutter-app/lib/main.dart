@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'splash_screen_one.dart'; // استيراد الشاشة الأولى
+import 'language_selection_page.dart'; // استيراد صفحة اختيار اللغة الصحيحة
 
 void main() {
   runApp(const MyApp());
@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.deepPurple,
       ),
-      home: const LanguageSelectionPage(), // جعل التطبيق يبدأ من الشاشة التمهيدية
+      home: const LanguageSelectionPage(), // البدء من واجهة اختيار اللغة
     );
   }
 }
