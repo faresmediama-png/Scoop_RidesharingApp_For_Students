@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'app_colors.dart';
-import 'search_route_modal.dart'; // سنقوم بإنشاء هذا الملف أيضاً
+import 'search_route_modal.dart';
+import 'ride_safety_page.dart'; // استيراد صفحة الأمان
 
 class HomeMapPage extends StatefulWidget {
   const HomeMapPage({Key? key}) : super(key: key);
@@ -15,8 +16,8 @@ class _HomeMapPageState extends State<HomeMapPage> {
   final List> categories = [
     {'title': 'Course', 'icon': Icons.directions_car_filled},
     {'title': 'Moto', 'icon': Icons.two_wheeler},
-    {'title': 'Confort', 'icon': Icons.time_to_leave},
-    {'title': 'Course+', 'icon': Icons.local_taxi},
+    {'title': 'Confort', 'icon': Icons.local_taxi},
+    {'title': 'Course', 'icon': Icons.local_taxi},
   ];
 
   @override
@@ -24,6 +25,7 @@ class _HomeMapPageState extends State<HomeMapPage> {
     return Scaffold(
       body: Stack(
         children: [
+          // خلفية الخريطة (Google Maps View)
           Container(
             color: AppColors.lightGrayBackground,
             child: const Center(
@@ -33,6 +35,8 @@ class _HomeMapPageState extends State<HomeMapPage> {
               ),
             ),
           ),
+
+          // زر القائمة الجانبية في الأعلى (على اليسار)
           Positioned(
             top: 50,
             left: 16,
@@ -41,10 +45,36 @@ class _HomeMapPageState extends State<HomeMapPage> {
               radius: 24,
               child: IconButton(
                 icon: const Icon(Icons.menu, color: AppColors.primaryPurple),
-                onPressed: () {},
+                onPressed: () {
+                  // إجراء القائمة الجانبية
+                },
               ),
             ),
           ),
+
+          // زر الأمان / الطوارئ (SOS) في الأعلى (على اليمين)
+          Positioned(
+            top: 50,
+            right: 16,
+            child: CircleAvatar(
+              backgroundColor: AppColors.whiteBackground,
+              radius: 24,
+              child: IconButton(
+                icon: const Icon(Icons.security, color: Colors.redAccent),
+                onPressed: () {
+                  // فتح نافذة الأمان والطوارئ عند الضغط عليها
+                  showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    backgroundColor: Colors.transparent,
+                    builder: (_) => const RideSafetyPage(),
+                  );
+                },
+              ),
+            ),
+          ),
+
+          // البانل السفلي لاختيار الوجهة والخدمات
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
@@ -52,7 +82,7 @@ class _HomeMapPageState extends State<HomeMapPage> {
                 color: AppColors.whiteBackground,
                 borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
                 boxShadow: [
-                  BoxShadow(color: Colors.black12, blurRadius: 10, spreadRadius: 2)
+                  BoxShadow(color: Colors.black12, blurRadius: 10, spreadRadius: 2),
                 ],
               ),
               child: Column(
@@ -64,10 +94,12 @@ class _HomeMapPageState extends State<HomeMapPage> {
                     height: 4,
                     decoration: BoxDecoration(
                       color: Colors.grey[300],
-                      borderRadius: BorderRadius.circular(2),
+                      borderRadius: BorderRadius.circular(25),
                     ),
                   ),
                   const SizedBox(height: 16),
+                  
+                  // شريط الفئات (Course, Moto, Confort...)
                   SizedBox(
                     height: 75,
                     child: ListView.builder(
@@ -119,7 +151,10 @@ class _HomeMapPageState extends State<HomeMapPage> {
                       },
                     ),
                   ),
+
                   const SizedBox(height: 12),
+
+                  // خانة البحث عن الوجهة (لبدء الرحلة)
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: InkWell(
@@ -135,7 +170,7 @@ class _HomeMapPageState extends State<HomeMapPage> {
                         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                         decoration: BoxDecoration(
                           color: AppColors.lightGrayBackground,
-                          borderRadius: BorderRadius.circular(16),
+                          borderRadius: BorderRadius.circular(15),
                         ),
                         child: Row(
                           children: const [
@@ -143,13 +178,17 @@ class _HomeMapPageState extends State<HomeMapPage> {
                             SizedBox(width: 12),
                             Text(
                               'Où et pour combien ?',
-                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                             ),
                           ],
                         ),
                       ),
                     ),
                   ),
+
+                  const SizedBox(height: 16),
+
+                  // الأماكن الأخيرة (Recent Items)
                   Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Column(
