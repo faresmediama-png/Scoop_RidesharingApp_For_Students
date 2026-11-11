@@ -9,7 +9,7 @@ class DriverSearchPage extends StatefulWidget {
 }
 
 class _DriverSearchPageState extends State<DriverSearchPage> {
-  int fare = 11; // السعر الافت بالدرهم المغربي
+  int fare = 11;
   bool autoAccept = false;
 
   @override
@@ -17,7 +17,6 @@ class _DriverSearchPageState extends State<DriverSearchPage> {
     return Scaffold(
       body: Stack(
         children: [
-          // خلفية الخريطة
           Container(
             color: AppColors.lightGrayBackground,
             child: const Center(
@@ -27,8 +26,6 @@ class _DriverSearchPageState extends State<DriverSearchPage> {
               ),
             ),
           ),
-
-          // زر العودة أو الإلغاء في الأعلى
           Positioned(
             top: 50,
             left: 16,
@@ -41,8 +38,6 @@ class _DriverSearchPageState extends State<DriverSearchPage> {
               ),
             ),
           ),
-
-          // النافذة السفلية للبحث عن السائقين والعروض
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
@@ -62,7 +57,6 @@ class _DriverSearchPageState extends State<DriverSearchPage> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // مؤقت البحث وعدد السوّاق الذين يراجعون الطلب
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: const [
@@ -99,16 +93,12 @@ class _DriverSearchPageState extends State<DriverSearchPage> {
                     ],
                   ),
                   const SizedBox(height: 16),
-
-                  // شريط التحميل الأفقي
                   LinearProgressIndicator(
                     value: 0.7,
                     backgroundColor: Colors.grey[200],
                     color: AppColors.primaryPurple,
                   ),
                   const SizedBox(height: 20),
-
-                  // صندوق التحكم في السعر (تعديل السعر بـ + و -)
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                     decoration: BoxDecoration(
@@ -157,8 +147,6 @@ class _DriverSearchPageState extends State<DriverSearchPage> {
                     ),
                   ),
                   const SizedBox(height: 16),
-
-                  // زر التأكيد
                   SizedBox(
                     width: double.infinity,
                     height: 50,
@@ -182,8 +170,6 @@ class _DriverSearchPageState extends State<DriverSearchPage> {
                     ),
                   ),
                   const SizedBox(height: 12),
-
-                  // زر القبول التلقائي
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
