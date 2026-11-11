@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'app_colors.dart';
-import 'track_ride_page.dart'; // الشاشة التي تنتقل إليها بعد التحقق
+import 'track_ride_page.dart';
 
 class FaceVerificationPage extends StatefulWidget {
   const FaceVerificationPage({Key? key}) : super(key: key);
@@ -16,7 +16,7 @@ class _FaceVerificationPageState extends State<FaceVerificationPage> {
   final ImagePicker _picker = ImagePicker();
   bool _isCapturing = false;
 
-  // دالة لالتقاط الصورة الحية عبر الكاميرا الأمامية حصرياً
+  // التقاط سيلفي أمني حي حصرياً للتأكد من الهوية
   Future<void> _captureLiveSelfie() async {
     setState(() {
       _isCapturing = true;
@@ -25,7 +25,7 @@ class _FaceVerificationPageState extends State<FaceVerificationPage> {
     try {
       final XFile? photo = await _picker.pickImage(
         source: ImageSource.camera,
-        preferredCameraDevice: CameraDevice.front, // الكاميرا الأمامية
+        preferredCameraDevice: CameraDevice.front, // الكاميرا الأمامية حصرياً للأمان
         maxWidth: 600,
         imageQuality: 80,
       );
@@ -60,10 +60,6 @@ class _FaceVerificationPageState extends State<FaceVerificationPage> {
           ),
         ),
         centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.blackText),
-          onPressed: () => Navigator.pop(context),
-        ),
       ),
       body: SafeArea(
         child: Padding(
@@ -73,7 +69,7 @@ class _FaceVerificationPageState extends State<FaceVerificationPage> {
             children: [
               const SizedBox(height: 10),
               const Text(
-                'لحماية سلامتك، يرجى التقاط صورة سيلفي حية الآن لمطابقة هويتك مع الحساب قبل انطلاق الرحلة.',
+                'لضمان أمان رحلات vaigo، يرجى التقاط صورة سيلفي حية الآن للتحقق من مطابقة هويتك قبل المتابعة.',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 14,
@@ -82,7 +78,7 @@ class _FaceVerificationPageState extends State<FaceVerificationPage> {
               ),
               const Spacer(),
 
-              // إطار عرض الصورة أو زر الكاميرا
+              // إطار السيلفي الأمني المؤقت
               GestureDetector(
                 onTap: _captureLiveSelfie,
                 child: Container(
@@ -109,13 +105,13 @@ class _FaceVerificationPageState extends State<FaceVerificationPage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: const [
                             Icon(
-                              Icons.camera_alt,
+                              Icons.camera_front,
                               size: 60,
                               color: AppColors.primaryPurple,
                             ),
                             SizedBox(height: 12),
                             Text(
-                              'اضغط لالتقاط السيلفي',
+                              'اضغط لالتقاط سيلفي الأمان',
                               style: TextStyle(
                                 fontSize: 13,
                                 fontWeight: FontWeight.bold,
@@ -129,13 +125,12 @@ class _FaceVerificationPageState extends State<FaceVerificationPage> {
               ),
               const SizedBox(height: 24),
 
-              // زر إعادة التقاط الصورة إذا لم تعجب الراكب
               if (_selfieImage != null)
                 TextButton.icon(
                   onPressed: _captureLiveSelfie,
                   icon: const Icon(Icons.refresh, color: AppColors.primaryPurple),
                   label: const Text(
-                    'إعادة التقاط الصورة',
+                    'إعادة التقاط السيلفي',
                     style: TextStyle(
                       color: AppColors.primaryPurple,
                       fontWeight: FontWeight.bold,
@@ -145,7 +140,7 @@ class _FaceVerificationPageState extends State<FaceVerificationPage> {
 
               const Spacer(),
 
-              // زر التأكيد والمتابعة (معطل حتى يتم التقاط الصورة)
+              // زر المتابعة
               SizedBox(
                 width: double.infinity,
                 height: 52,
@@ -161,7 +156,7 @@ class _FaceVerificationPageState extends State<FaceVerificationPage> {
                   ),
                   onPressed: _selfieImage != null
                       ? () {
-                          // الانتقال لشاشة تتبع الرحلة بعد نجاح التحقق
+                          // الانتقال لشاشة تتبع الرحلة
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
