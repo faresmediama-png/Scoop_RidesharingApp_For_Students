@@ -12,8 +12,13 @@ workflows:
       - name: Get flutter packages
         script: |
           flutter pub get
+      - name: Fix and generate Android wrapper
+        script: |
+          cd android
+          gradle wrapper --gradle-version 7.5
+          cd ..
       - name: Build APK for Vaigo
         script: |
-          flutter build apk --release --verbose
+          flutter build apk --release --no-pub
     artifacts:
       - build/app/outputs/flutter-apk/app-release.apk
