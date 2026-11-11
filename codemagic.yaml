@@ -19,6 +19,7 @@ workflows:
           cd ..
       - name: Build APK for Vaigo
         script: |
-          flutter build apk --release --no-pub
+          flutter build apk --release --no-pub --no-version-check
+
     artifacts:
       - build/app/outputs/flutter-apk/app-release.apk
